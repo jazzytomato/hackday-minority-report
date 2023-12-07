@@ -5,13 +5,12 @@
 ; Happy coding! ♥️
 
 ; Jacking in...
-
 ; Connecting using "deps.edn" project type.
 ; You can make Calva auto-select this.
 ;   - See https://calva.io/connect-sequences/
 ;
-; Starting Jack-in Terminal: pushd /home/vlad/Documents/dev/clj/experiments/maat-example ; clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M:portal:test -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]" ; popd
-; Using host:port localhost:40277 ...
+; Starting Jack-in Terminal: pushd /home/vlad/work/hackday-minority-report/maat-example ; clojure -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.0.0"},cider/cider-nrepl {:mvn/version,"0.28.5"}}}' -M:test -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]" ; popd
+; Using host:port localhost:39547 ...
 ; Hooking up nREPL sessions ...
 ; Connected session: clj
 ; TIPS:
@@ -26,15 +25,13 @@
 nil
 clj꞉user꞉>  ; Use `alt+enter` to evaluate
 clj꞉user꞉> 
-; Evaluating file: maat_example.clj
 ; Jack-in done.
 clj꞉user꞉> 
+; Connecting using "undefined" project type.
+; You can make Calva auto-select this.
+;   - See https://calva.io/connect-sequences/
+;
+; Aborting connect, error determining connect sequence.
+; Evaluating file: maat_example.clj
 nil
-clj꞉maat-example.maat-example꞉> 
-(maat/analysis-names)
-"abs-churn, age, author-churn, authors, communication, coupling, entity-churn, entity-effort, entity-ownership, fragmentation, identity, main-dev, main-dev-by-revs, messages, refactoring-main-dev, revisions, soc, summary"
-clj꞉maat-example.maat-example꞉> 
-(def ans
-    (run-all-analyses "resources/logfile.log" "git2"))
-#'maat-example.maat-example/ans
 clj꞉maat-example.maat-example꞉> 
