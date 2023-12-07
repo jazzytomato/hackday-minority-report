@@ -1,7 +1,7 @@
-# Use a base image with Python (for the web server) and bash
-FROM python:3.8-slim
+# Use a base image with Java
+FROM openjdk:11-slim
 
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y python3 python3-pip git
 
 # Download and install the complexity tool
 ADD https://github.com/thoughtbot/complexity/releases/download/0.4.2/complexity-0.4.2-x86_64-unknown-linux-musl.tar.gz /tmp/
@@ -10,11 +10,16 @@ RUN mv /tmp/complexity-0.4.2-x86_64-unknown-linux-musl/complexity /usr/local/bin
 
 RUN complexity install-configuration
 
+COPY code-maat-1.0.4-standalone.jar /usr/local/bin/code-maat-1.0.4-standalone.jar
+
 # Copy analysis script and the entrypoint script into the image
 COPY churn_vs_complexity.sh /usr/local/bin/churn_vs_complexity.sh
+COPY coupling.sh /usr/local/bin/coupling.sh
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /usr/local/bin/churn_vs_complexity.sh
+RUN chmod +x /usr/local/bin/coupling.sh
 RUN chmod +x /entrypoint.sh
+
 
 # Create a directory for the web server content and analysis
 WORKDIR /var/www

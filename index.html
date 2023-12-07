@@ -10,6 +10,8 @@
     <h1>Analysis of {{PROJECT_NAME}}</h1>
     <h2>Churn vs Complexity</h2>
     <canvas id="churn_vs_complexity"></canvas>
+    <h2>Coupling</h2>
+    <canvas id="coupling"></canvas>
 </div>
 <script>
     const fileBgColor = (filename) => { return filename.toLowerCase().includes('test') ? 'rgba(0,255,34,0.5)' : 'rgba(0, 123, 255, 0.5)' };
@@ -42,6 +44,41 @@
                                     return context.raw.label + ': (Churn: ' + context.raw.x + ', Complexity: ' + context.raw.y + ')';
                                 }
                             }
+                        }
+                    }
+                }
+            });
+        });
+
+
+    // coupling
+    fetch('coupling.json')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('coupling').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => `${item.entity} - ${item.coupled}`),
+                    datasets: [{
+                        label: 'Degree of Coupling',
+                        data: data.map(item => item.degree),
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                        {
+                            label: 'Average Revisions',
+                            data: data.map(item => item.average_revs),
+                            backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                            borderColor: 'rgba(255, 206, 86, 1)',
+                            borderWidth: 1
+                        }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
                         }
                     }
                 }
