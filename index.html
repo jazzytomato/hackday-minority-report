@@ -11,8 +11,10 @@
     <h2>Summary</h2>
     <div id="summary-table"></div>
     <h2>Churn vs Complexity</h2>
+    <p>Use this chart to prioritise tech debt & refactoring efforts. The files in the top right are problematic, because they are complex and change often. A sane codebase should tend to cluster files around a line that goes from the top-left quadrant to the bottom-right one, and never go into the top-right quadrant.</p>
     <canvas id="churn_vs_complexity"></canvas>
     <h2>Coupling</h2>
+    <p>Logical coupling refers to modules that tend to change together. Modules that are logically coupled have a hidden, implicit dependency between them such that a change to one of them leads to a predictable change in the coupled module. </p>
     <canvas id="coupling"></canvas>
 </div>
 <script>
