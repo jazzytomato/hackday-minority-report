@@ -6,7 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<div style="width:60%;margin: 0 auto;">
+<div style="width:90%;margin: 0 auto;">
     <h1>Analysis of {{PROJECT_NAME}}</h1>
     <h2>Churn vs Complexity</h2>
     <canvas id="churn_vs_complexity"></canvas>
@@ -56,10 +56,16 @@
         .then(response => response.json())
         .then(data => {
             const ctx = document.getElementById('coupling').getContext('2d');
+            const fullLabels = data.map(item => `${item.entity} - ${item.coupled}`)
+            const shortName = (name) => {
+                const parts = name.split('/');
+                return parts[parts.length - 1];
+            };
+            const shortLabels = data.map(item => `${shortName(item.entity)} - ${shortName(item.coupled)}`)
             const chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: data.map(item => `${item.entity} - ${item.coupled}`),
+                    labels: shortLabels,
                     datasets: [{
                         label: 'Degree of Coupling',
                         data: data.map(item => item.degree),
@@ -80,7 +86,24 @@
                         y: {
                             beginAtZero: true
                         }
+                    },
+                    tooltips: {
+                        callbacks: {
+                            title: function (item, data) {
+                                return `${item.entity} - ${item.coupled}`;
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems, data) {
+                                    return fullLabels[tooltipItems[0].dataIndex];
+                                }
+                            }
+                        }
                     }
+
                 }
             });
         });
