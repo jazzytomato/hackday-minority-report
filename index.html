@@ -8,13 +8,17 @@
 <body>
 <div style="width:90%;margin: 0 auto;">
     <h1>Analysis of {{PROJECT_NAME}}</h1>
+    <h2>Summary</h2>
+    <div id="summary-table"></div>
     <h2>Churn vs Complexity</h2>
     <canvas id="churn_vs_complexity"></canvas>
     <h2>Coupling</h2>
     <canvas id="coupling"></canvas>
 </div>
 <script>
-    const fileBgColor = (filename) => { return filename.toLowerCase().includes('test') ? 'rgba(0,255,34,0.5)' : 'rgba(0, 123, 255, 0.5)' };
+    const fileBgColor = (filename) => {
+        return filename.toLowerCase().includes('test') ? 'rgba(0,255,34,0.5)' : 'rgba(0, 123, 255, 0.5)'
+    };
     fetch('churn_vs_complexity.json')
         .then(response => response.json())
         .then(data => {
@@ -34,13 +38,13 @@
                 },
                 options: {
                     scales: {
-                        x: { title: { display: true, text: 'Churn (Number of Changes)' } },
-                        y: { title: { display: true, text: 'Complexity Score' } }
+                        x: {title: {display: true, text: 'Churn (Number of Changes)'}},
+                        y: {title: {display: true, text: 'Complexity Score'}}
                     },
                     plugins: {
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
+                                label: function (context) {
                                     return context.raw.label + ': (Churn: ' + context.raw.x + ', Complexity: ' + context.raw.y + ')';
                                 }
                             }
@@ -97,7 +101,7 @@
                     plugins: {
                         tooltip: {
                             callbacks: {
-                                title: function(tooltipItems, data) {
+                                title: function (tooltipItems, data) {
                                     return fullLabels[tooltipItems[0].dataIndex];
                                 }
                             }
@@ -107,6 +111,36 @@
                 }
             });
         });
+
+
+    fetch('summary.json')
+        .then(response => response.json())
+        .then(data => {
+            const table = document.createElement('table');
+            table.style.width = '100%';
+            table.setAttribute('border', '0');
+
+            // Create table header
+            const thead = table.createTHead();
+            const headerRow = thead.insertRow();
+            const headerCell1 = headerRow.insertCell();
+            headerCell1.innerHTML = "<b>Statistic</b>";
+            const headerCell2 = headerRow.insertCell();
+            headerCell2.innerHTML = "<b>Value</b>";
+
+            // Create table body
+            const tbody = table.createTBody();
+            for (const key in data) {
+                const row = tbody.insertRow();
+                const cell1 = row.insertCell();
+                cell1.textContent = key;
+                const cell2 = row.insertCell();
+                cell2.textContent = data[key];
+            }
+
+            document.getElementById('summary-table').appendChild(table);
+        })
+        .catch(error => console.error('Error:', error));
 </script>
 </body>
 </html>
