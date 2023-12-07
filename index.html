@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hackday</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div style="width:60%;margin: 0 auto;">
+    <canvas id="myChart"></canvas>
+</div>
+<script>
+    fetch('churn_vs_complexity.json')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Files',
+                        data: data.map(item => ({
+                            x: item.churn,
+                            y: item.complexity,
+                            label: item.file
+                        })),
+                        backgroundColor: 'rgba(0, 123, 255, 0.5)'
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: { title: { display: true, text: 'Churn (Number of Changes)' } },
+                        y: { title: { display: true, text: 'Complexity Score' } }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw.label + ': (Churn: ' + context.raw.x + ', Complexity: ' + context.raw.y + ')';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+</script>
+</body>
+</html>
