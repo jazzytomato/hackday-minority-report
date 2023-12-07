@@ -7,13 +7,16 @@
 </head>
 <body>
 <div style="width:60%;margin: 0 auto;">
-    <canvas id="myChart"></canvas>
+    <h1>Analysis of {{PROJECT_NAME}}</h1>
+    <h2>Churn vs Complexity</h2>
+    <canvas id="churn_vs_complexity"></canvas>
 </div>
 <script>
+    const fileBgColor = (filename) => { return filename.toLowerCase().includes('test') ? 'rgba(0,255,34,0.5)' : 'rgba(0, 123, 255, 0.5)' };
     fetch('churn_vs_complexity.json')
         .then(response => response.json())
         .then(data => {
-            const ctx = document.getElementById('myChart').getContext('2d');
+            const ctx = document.getElementById('churn_vs_complexity').getContext('2d');
             const chart = new Chart(ctx, {
                 type: 'scatter',
                 data: {
@@ -24,7 +27,7 @@
                             y: item.complexity,
                             label: item.file
                         })),
-                        backgroundColor: 'rgba(0, 123, 255, 0.5)'
+                        backgroundColor: data.map(item => fileBgColor(item.file))
                     }]
                 },
                 options: {
