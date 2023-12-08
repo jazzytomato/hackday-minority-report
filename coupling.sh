@@ -1,6 +1,6 @@
 #!/bin/bash
 
-git log --all --numstat --date=short --pretty=format:'--%h--%ad--%aN' --no-renames  > /tmp/maat-logfile.log
+git log --all --numstat --date=short --pretty=format:'--%h--%ad--%aN' --no-renames . > /tmp/maat-logfile.log
 
 java -jar /usr/local/bin/code-maat-1.0.4-standalone.jar -l /tmp/maat-logfile.log -c git2 -a coupling > /tmp/maat-coupling.txt
 
