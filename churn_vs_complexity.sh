@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Analyzing Git history..."
-git_log_output=$(git log --pretty=format: --name-only | sort | uniq -c | sort -rg | head -250)
+git_log_output=$(git log --pretty=format: --name-only | sort | uniq -c | sort -rg)
 echo "Most frequently changed files:"
 echo "$git_log_output"
 echo ""
@@ -12,7 +12,7 @@ cat /tmp/git_log_files.txt
 echo ""
 
 echo "Running complexity analysis..."
-complexity_output=$(complexity | sort -n --reverse | head -n 250)
+complexity_output=$(complexity | sort -n --reverse)
 echo "Most complex files:"
 echo "$complexity_output"
 echo ""

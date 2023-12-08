@@ -10,6 +10,9 @@
     <h1>Analysis of {{PROJECT_NAME}}</h1>
     <h2>Summary</h2>
     <div id="summary-table"></div>
+    <h2>Authors analysis</h2>
+    <p>The authors analysis is based on the idea that the more developers working on a module, the larger the communication challenges. The number of authors and the number of revisions metrics taken together serve as predictors of defects and quality issues.</p>
+    <canvas id="author_analysis"></canvas>
     <h2>Churn vs Complexity</h2>
     <p>Use this chart to prioritise tech debt & refactoring efforts. The files in the top right are problematic, because they are complex and change often. A sane codebase should tend to cluster files around a line that goes from the top-left quadrant to the bottom-right one, and never go into the top-right quadrant.</p>
     <canvas id="churn_vs_complexity"></canvas>
@@ -19,7 +22,7 @@
 </div>
 <script>
     const fileBgColor = (filename) => {
-        return filename.toLowerCase().includes('test') ? 'rgba(0,255,34,0.5)' : 'rgba(0, 123, 255, 0.5)'
+        return filename.toLowerCase().includes('test') ? 'rgba(54,173,69,0.5)' : 'rgba(0, 123, 255, 0.5)'
     };
     fetch('churn_vs_complexity.json')
         .then(response => response.json())
@@ -68,6 +71,13 @@
                 return parts[parts.length - 1];
             };
             const shortLabels = data.map(item => `${shortName(item.entity)} - ${shortName(item.coupled)}`)
+            const bgColor = (item) => {
+                if (item.entity.toLowerCase().includes('test') || item.coupled.toLowerCase().includes('test')) {
+                    return 'rgba(54,173,69,0.5)';
+                } else {
+                    return 'rgba(0, 123, 255, 0.5)';
+                }
+            }
             const chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -75,7 +85,7 @@
                     datasets: [{
                         label: 'Degree of Coupling',
                         data: data.map(item => item.degree),
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        backgroundColor: data.map(item => bgColor(item)),
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
                     },
@@ -143,6 +153,56 @@
             document.getElementById('summary-table').appendChild(table);
         })
         .catch(error => console.error('Error:', error));
+
+    fetch('org.json')
+        .then(response => response.json())
+        .then(data => data.filter(item => item.n_authors > 1))
+        .then(data => {
+            const ctx = document.getElementById('author_analysis').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => item.entity),
+                    datasets: [{
+                        label: 'Number of Authors',
+                        data: data.map(item => item.n_authors),
+                        backgroundColor: 'rgba(252,199,0,0.2)',
+                        borderColor: 'rgb(255,224,99)',
+                        yAxisID: 'y-authors'
+                    }, {
+                        label: 'Number of Revisions',
+                        data: data.map(item => item.n_revs),
+                        backgroundColor: 'rgba(11,151,246,0.33)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        yAxisID: 'y-revs'
+                    }]
+                },
+                options: {
+                    scales: {
+                        'y-authors': {
+                            beginAtZero: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Number of Authors'
+                            }
+                        },
+                        'y-revs': {
+                            beginAtZero: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Number of Revisions'
+                            },
+                            grid: {
+                                drawOnChartArea: false // only draw the grid lines for this axis
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
 </script>
 </body>
 </html>
